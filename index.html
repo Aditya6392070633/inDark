@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Probo - Opinion Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #F4F5F7;
+    color: #1A1A2E;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ===== SPLASH SCREEN ===== */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0a0a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Animated grid lines background */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,150,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,150,0.07) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 6s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50px); }
+  }
+
+  /* Radial glow center */
+  .glow-center {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,200,150,0.15) 0%, transparent 70%);
+    animation: glowPulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* Animated circles */
+  .orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0,200,150,0.2);
+    animation: orbitSpin linear infinite;
+  }
+
+  .orbit1 { width: 300px; height: 300px; animation-duration: 8s; }
+  .orbit2 { width: 450px; height: 450px; animation-duration: 12s; border-color: rgba(102,126,234,0.15); }
+  .orbit3 { width: 600px; height: 600px; animation-duration: 18s; border-color: rgba(0,200,150,0.08); }
+
+  @keyframes orbitSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .orbit1::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00C896;
+    box-shadow: 0 0 12px #00C896, 0 0 24px #00C896;
+    transform: translateX(-50%);
+  }
+
+  .orbit2::before {
+    content: '';
+    position: absolute;
+    top: -4px; left: 50%;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #667EEA;
+    box-shadow: 0 0 10px #667EEA;
+    transform: translateX(-50%);
+  }
+
+  /* Splash content */
+  .splash-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+  }
+
+  /* Logo animation */
+  .splash-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    animation: logoReveal 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  }
+
+  @keyframes logoReveal {
+    from { opacity: 0; transform: scale(0.5) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .splash-logo-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #00C896, #00A879);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 0 30px rgba(0,200,150,0.5);
+    animation: iconGlow 2s ease-in-out 1s infinite;
+  }
+
+  @keyframes iconGlow {
+    0%, 100% { box-shadow: 0 0 30px rgba(0,200,150,0.5); }
+    50% { box-shadow: 0 0 60px rgba(0,200,150,0.8), 0 0 90px rgba(0,200,150,0.3); }
+  }
+
+  .splash-logo-text {
+    font-size: 52px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -1px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* Tagline */
+  .splash-tagline {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.6s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Animated lines */
+  .lines-container {
+    position: relative;
+    width: 280px;
+    height: 3px;
+    margin: 0 auto 40px;
+    animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.7s both;
+  }
+
+  .line-track {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 2px;
+  }
+
+  .line-glow {
+    position: absolute;
+    height: 3px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, #00C896, transparent);
+    border-radius: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: lineSlide 1.8s ease-in-out 1s infinite;
+  }
+
+  .line-glow2 {
+    position: absolute;
+    height: 3px;
+    width: 40px;
+    background: linear-gradient(90deg, transparent, #667EEA, transparent);
+    border-radius: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: lineSlide2 2.2s ease-in-out 1.4s infinite;
+  }
+
+  @keyframes lineSlide {
+    0% { left: -60px; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+
+  @keyframes lineSlide2 {
+    0% { left: 100%; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: -40px; opacity: 0; }
+  }
+
+  /* "Created by Deepak" section */
+  .created-by {
+    animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.9s both;
+  }
+
+  .created-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .deepak-name {
+    font-family: 'Pacifico', cursive;
+    font-size: 38px;
+    background: linear-gradient(135deg, #00C896 0%, #00e5a8 30%, #667EEA 60%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: nameShine 2.5s linear 1.5s infinite;
+    filter: drop-shadow(0 0 20px rgba(0,200,150,0.4));
+  }
+
+  @keyframes nameShine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* Letter by letter pop */
+  .deepak-name span {
+    display: inline-block;
+    animation: letterPop 0.5s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .deepak-name span:nth-child(1) { animation-delay: 1.1s; }
+  .deepak-name span:nth-child(2) { animation-delay: 1.2s; }
+  .deepak-name span:nth-child(3) { animation-delay: 1.3s; }
+  .deepak-name span:nth-child(4) { animation-delay: 1.4s; }
+  .deepak-name span:nth-child(5) { animation-delay: 1.5s; }
+  .deepak-name span:nth-child(6) { animation-delay: 1.6s; }
+
+  @keyframes letterPop {
+    from { opacity: 0; transform: translateY(20px) scale(0.5) rotate(-8deg); }
+    to { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  }
+
+  /* Decorative dots */
+  .dot-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .dot.active {
+    background: #00C896;
+    box-shadow: 0 0 8px #00C896;
+    animation: dotBlink 1s ease-in-out 2s infinite;
+  }
+
+  @keyframes dotBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    animation: fadeUp 0.8s ease 1.2s both;
+  }
+
+  .progress-track {
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00C896, #667EEA);
+    border-radius: 10px;
+    animation: progressLoad 2.8s cubic-bezier(0.4,0,0.2,1) 0.5s both;
+  }
+
+  @keyframes progressLoad {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  .progress-text {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Splash exit animation */
+  #splash.exit {
+    animation: splashExit 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+
+  @keyframes splashExit {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+    100% { opacity: 0; transform: scale(0.95); pointer-events: none; }
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===== APP WRAPPER ===== */
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    background: #F4F5F7;
+  }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    background: #ffffff;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00C896, #00A879);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 900;
+    color: #1A1A2E;
+    letter-spacing: -0.5px;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .wallet-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #F8FFF9;
+    border: 1.5px solid #E0F7F1;
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  .wallet-amount {
+    font-size: 14px;
+    font-weight: 800;
+    color: #00C896;
+  }
+
+  .wallet-plus {
+    font-size: 16px;
+    font-weight: 800;
+    color: #00C896;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667EEA, #764BA2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* ===== PORTFOLIO BANNER ===== */
+  .portfolio {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+    padding: 20px 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portfolio-deco1 {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(0,200,150,0.08);
+    pointer-events: none;
+  }
+
+  .portfolio-deco2 {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(102,126,234,0.08);
+    pointer-events: none;
+  }
+
+  .portfolio-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .portfolio-value {
+    font-size: 32px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+  }
+
+  .portfolio-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0,200,150,0.15);
+    border: 1px solid rgba(0,200,150,0.25);
+    border-radius: 20px;
+    padding: 4px 10px;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #00C896;
+  }
+
+  .portfolio-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .stat-box {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffffff;
+  }
+
+  .stat-val.green {
+    color: #00C896;
+  }
+
+  .stat-lbl {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    background: #ffffff;
+    display: flex;
+    border-bottom: 1px solid #F0F0F0;
+    position: sticky;
+    top: 64px;
+    z-index: 40;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 13px 4px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #AAAAAA;
+    border-bottom: 2.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .tab.active {
+    font-weight: 800;
+    color: #1A1A2E;
+    border-bottom-color: #1A1A2E;
+  }
+
+  /* ===== SCROLL CONTENT ===== */
+  .scroll-content {
+    overflow-y: auto;
+    padding-bottom: 90px;
+  }
+
+  /* ===== LIVE BANNER ===== */
+  .live-banner {
+    margin: 12px 12px 0;
+    background: linear-gradient(135deg, #1A1A2E, #2D2B55);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  .live-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #FF6B35, #F5C542);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .live-text {
+    flex: 1;
+  }
+
+  .live-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .live-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  .live-badge {
+    background: #FF4D6A;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    animation: livePulse 1.5s infinite;
+  }
+
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ===== CATEGORIES ===== */
+  .categories {
+    display: flex;
+    gap: 8px;
+    padding: 12px 12px 8px;
+    overflow-x: auto;
+  }
+
+  .cat-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid #E8E8E8;
+    background: #ffffff;
+    color: #555555;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .cat-btn.active {
+    border-color: #1A1A2E;
+    background: #1A1A2E;
+    color: #ffffff;
+  }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: #1A1A2E;
+    padding: 4px 12px 10px;
+  }
+
+  /* ===== EVENT CARDS ===== */
+  .cards-list {
+    padding: 0 12px;
+  }
+
+  .event-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+
+  .event-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  .card-body {
+    padding: 14px 16px 12px;
+  }
+
+  .card-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .category-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .badge-live {
+    background: #FF4D6A;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.8px;
+    animation: livePulse 1.5s infinite;
+  }
+
+  .badge-trending {
+    background: #FFF3E0;
+    color: #E65100;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  .card-ends {
+    font-size: 11px;
+    color: #AAAAAA;
+    margin-left: auto;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1A1A2E;
+    line-height: 1.45;
+    margin-bottom: 12px;
+  }
+
+  .card-stats {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .card-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #888888;
+  }
+
+  /* PROB BAR */
+  .prob-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+
+  .yes-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #00C896;
+  }
+
+  .no-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FF4D6A;
+  }
+
+  .prob-track {
+    height: 5px;
+    background: #FFE8EC;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .prob-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00C896, #00E5A8);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+  }
+
+  /* BET BUTTONS */
+  .bet-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid #F5F5F5;
+  }
+
+  .bet-btn {
+    padding: 13px 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+  }
+
+  .bet-btn.yes-btn {
+    background: #F0FBF8;
+    border-right: 1px solid #F5F5F5;
+  }
+
+  .bet-btn.yes-btn:hover {
+    background: #E0F7F1;
+  }
+
+  .bet-btn.no-btn {
+    background: #FFF5F7;
+  }
+
+  .bet-btn.no-btn:hover {
+    background: #FFE8EC;
+  }
+
+  .bet-type {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 1px;
+  }
+
+  .bet-type.yes {
+    color: #00C896;
+  }
+
+  .bet-type.no {
+    color: #FF4D6A;
+  }
+
+  .bet-price {
+    font-size: 20px;
+    font-weight: 900;
+  }
+
+  .bet-price.yes {
+    color: #00C896;
+  }
+
+  .bet-price.no {
+    color: #FF4D6A;
+  }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    border-top: 1px solid #F0F0F0;
+    display: flex;
+    padding-bottom: 8px;
+    z-index: 50;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px 4px;
+    cursor: pointer;
+  }
+
+  .nav-icon {
+    font-size: 22px;
+    filter: grayscale(1) opacity(0.5);
+  }
+
+  .nav-item.active .nav-icon {
+    filter: none;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    margin-top: 3px;
+    font-weight: 700;
+    color: #BBBBBB;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .nav-item.active .nav-label {
+    color: #1A1A2E;
+  }
+
+  .nav-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #00C896;
+    margin-top: 3px;
+  }
+
+  /* ===== MODAL OVERLAY ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-sheet {
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 480px;
+    padding: 0 0 32px;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .modal-overlay.open .modal-sheet {
+    transform: translateY(0);
+  }
+
+  .modal-handle-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0 4px;
+  }
+
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    border-radius: 4px;
+    background: #E0E0E0;
+  }
+
+  .modal-header {
+    padding: 12px 20px 0;
+    border-bottom: 1px solid #F5F5F5;
+  }
+
+  .modal-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1A1A2E;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .modal-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #F5F5F5;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .trade-type-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+    margin-bottom: 16px;
+  }
+
+  .trade-type-btn {
+    padding: 13px;
+    border-radius: 10px;
+    border: 2px solid #E8E8E8;
+    background: #FAFAFA;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+  }
+
+  .trade-type-btn.yes-sel {
+    border-color: #00C896;
+    background: #E8FDF7;
+  }
+
+  .trade-type-btn.no-sel {
+    border-color: #FF4D6A;
+    background: #FFF0F3;
+  }
+
+  .trade-type-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #999999;
+    margin-bottom: 2px;
+  }
+
+  .trade-type-btn.yes-sel .trade-type-label {
+    color: #00C896;
+  }
+
+  .trade-type-btn.no-sel .trade-type-label {
+    color: #FF4D6A;
+  }
+
+  .trade-type-price {
+    font-size: 22px;
+    font-weight: 900;
+    color: #333333;
+  }
+
+  .trade-type-btn.yes-sel .trade-type-price {
+    color: #00C896;
+  }
+
+  .trade-type-btn.no-sel .trade-type-price {
+    color: #FF4D6A;
+  }
+
+  /* MODAL BODY */
+  .modal-body {
+    padding: 16px 20px 0;
+  }
+
+  .amount-label {
+    font-size: 12px;
+    color: #999999;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .presets-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .preset-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #E8E8E8;
+    background: #FAFAFA;
+    color: #555555;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .preset-btn.active {
+    border-color: #4A90E2;
+    background: #EEF4FF;
+    color: #4A90E2;
+  }
+
+  .amount-input-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #E8E8E8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    background: #FAFAFA;
+    margin-bottom: 16px;
+  }
+
+  .rupee-sign {
+    font-size: 20px;
+    color: #999999;
+    margin-right: 8px;
+    font-weight: 700;
+  }
+
+  .amount-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 26px;
+    font-weight: 900;
+    color: #1A1A2E;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* SUMMARY */
+  .summary-box {
+    background: #F8F9FA;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 13px;
+  }
+
+  .summary-key {
+    color: #888888;
+  }
+
+  .summary-val {
+    font-weight: 800;
+    color: #1A1A2E;
+  }
+
+  .summary-val.green {
+    color: #00C896;
+  }
+
+  .summary-val.red {
+    color: #FF4D6A;
+  }
+
+  /* CONFIRM BTN */
+  .confirm-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s;
+  }
+
+  .confirm-btn.yes {
+    background: #00C896;
+    box-shadow: 0 4px 16px rgba(0,200,150,0.4);
+  }
+
+  .confirm-btn.no {
+    background: #FF4D6A;
+    box-shadow: 0 4px 16px rgba(255,77,106,0.4);
+  }
+
+  .confirm-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* ===== SUCCESS TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1A1A2E;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 2000;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div id="splash">
+  <div class="grid-bg"></div>
+  <div class="glow-center"></div>
+  <div class="orbit orbit1"></div>
+  <div class="orbit orbit2"></div>
+  <div class="orbit orbit3"></div>
+
+  <div class="particle" style="width:4px;height:4px;background:#00C896;top:20%;left:15%;opacity:0.6;animation:glowPulse 3s ease-in-out 0.5s infinite;box-shadow:0 0 8px #00C896;position:absolute;border-radius:50%;"></div>
+  <div class="particle" style="width:3px;height:3px;background:#667EEA;top:70%;left:80%;opacity:0.5;animation:glowPulse 4s ease-in-out 1s infinite;box-shadow:0 0 6px #667EEA;position:absolute;border-radius:50%;"></div>
+  <div class="particle" style="width:5px;height:5px;background:#00C896;top:80%;left:20%;opacity:0.4;animation:glowPulse 3.5s ease-in-out 0.2s infinite;box-shadow:0 0 10px #00C896;position:absolute;border-radius:50%;"></div>
+  <div class="particle" style="width:3px;height:3px;background:#a78bfa;top:30%;left:85%;opacity:0.5;animation:glowPulse 2.8s ease-in-out 0.8s infinite;box-shadow:0 0 8px #a78bfa;position:absolute;border-radius:50%;"></div>
+  <div class="particle" style="width:4px;height:4px;background:#00e5a8;top:55%;left:10%;opacity:0.4;animation:glowPulse 3.2s ease-in-out 1.2s infinite;box-shadow:0 0 8px #00e5a8;position:absolute;border-radius:50%;"></div>
+
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="splash-logo-icon">📊</div>
+      <span class="splash-logo-text">probo</span>
+    </div>
+
+    <div class="splash-tagline">Opinion Trading Platform</div>
+
+    <div class="lines-container">
+      <div class="line-track"></div>
+      <div class="line-glow"></div>
+      <div class="line-glow2"></div>
+    </div>
+
+    <div class="created-by">
+      <div class="created-label">Created by</div>
+      <div class="deepak-name">
+        <span>D</span><span>e</span><span>e</span><span>p</span><span>a</span><span>k</span>
+      </div>
+      <div class="dot-row">
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="progress-text">Loading...</div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo-icon">📊</div>
+      <span class="logo-text">probo</span>
+    </div>
+    <div class="topbar-right">
+      <div class="wallet-pill">
+        <span>💵</span>
+        <span class="wallet-amount">₹1,240</span>
+        <span class="wallet-plus">+</span>
+      </div>
+      <div class="avatar">R</div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="portfolio">
+    <div class="portfolio-deco1"></div>
+    <div class="portfolio-deco2"></div>
+    <div class="portfolio-label">Portfolio Value</div>
+    <div class="portfolio-value">₹5,840.50</div>
+    <div class="portfolio-change">▲ +₹340 (6.2%) today</div>
+    <div class="portfolio-stats">
+      <div class="stat-box">
+        <div class="stat-val">14</div>
+        <div class="stat-lbl">Active</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">₹8.4K</div>
+        <div class="stat-lbl">Invested</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val green">72%</div>
+        <div class="stat-lbl">Win Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this)">Events</div>
+    <div class="tab" onclick="switchTab(this)">My Trades</div>
+    <div class="tab" onclick="switchTab(this)">Leaderboard</div>
+  </div>
+
+  <!-- SCROLL CONTENT -->
+  <div class="scroll-content">
+
+    <!-- LIVE BANNER -->
+    <div class="live-banner">
+      <div class="live-icon">🏏</div>
+      <div class="live-text">
+        <div class="live-title">India vs England T20I — LIVE</div>
+        <div class="live-sub">2.4L traders active · ₹12.6Cr traded</div>
+      </div>
+      <div class="live-badge">LIVE</div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories" id="categories">
+      <button class="cat-btn active" onclick="filterCat(this, 'all')">All</button>
+      <button class="cat-btn" onclick="filterCat(this, 'cricket')">🏏 Cricket</button>
+      <button class="cat-btn" onclick="filterCat(this, 'politics')">🗳️ Politics</button>
+      <button class="cat-btn" onclick="filterCat(this, 'finance')">📈 Finance</button>
+      <button class="cat-btn" onclick="filterCat(this, 'crypto')">₿ Crypto</button>
+      <button class="cat-btn" onclick="filterCat(this, 'entertainment')">🎬 Entertainment</button>
+      <button class="cat-btn" onclick="filterCat(this, 'football')">⚽ Football</button>
+    </div>
+
+    <!-- SECTION TITLE -->
+    <div class="section-title" id="section-title">🔥 Top Events</div>
+
+    <!-- CARDS -->
+    <div class="cards-list" id="cards-list">
+
+      <!-- CARD 1 -->
+      <div class="event-card" data-cat="cricket">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#E8F5E9;color:#2E7D32;">🏏 Cricket</span>
+            <span class="badge-live">● LIVE</span>
+            <span class="card-ends">Ends Tonight</span>
+          </div>
+          <div class="card-title">Will India win the 1st T20I against England today?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 1.2L traders</span>
+            <span class="card-stat">💰 ₹4.8Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 65%</span>
+            <span class="no-label">NO 35%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:65%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will India win the 1st T20I against England today?', 6.5, 3.5, 65)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹6.5</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will India win the 1st T20I against England today?', 6.5, 3.5, 65, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹3.5</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="event-card" data-cat="politics">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#EDE7F6;color:#4527A0;">🗳️ Politics</span>
+            <span class="badge-trending">🔥 Trending</span>
+            <span class="card-ends">Ends Feb 28</span>
+          </div>
+          <div class="card-title">Will BJP win more than 40 seats in Delhi assembly elections?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 3.4L traders</span>
+            <span class="card-stat">💰 ₹12.2Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 72%</span>
+            <span class="no-label">NO 28%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:72%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will BJP win more than 40 seats in Delhi assembly elections?', 7.2, 2.8, 72)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹7.2</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will BJP win more than 40 seats in Delhi assembly elections?', 7.2, 2.8, 72, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹2.8</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="event-card" data-cat="crypto">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#FFF8E1;color:#F57F17;">₿ Crypto</span>
+            <span class="badge-trending">🔥 Trending</span>
+            <span class="card-ends">Ends Mar 1</span>
+          </div>
+          <div class="card-title">Will Bitcoin price be above $95,000 on March 1st, 2025?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 87K traders</span>
+            <span class="card-stat">💰 ₹6.1Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 41%</span>
+            <span class="no-label">NO 59%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:41%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will Bitcoin price be above $95,000 on March 1st, 2025?', 4.1, 5.9, 41)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹4.1</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will Bitcoin price be above $95,000 on March 1st, 2025?', 4.1, 5.9, 41, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹5.9</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="event-card" data-cat="finance">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#E3F2FD;color:#1565C0;">📈 Finance</span>
+            <span class="card-ends">Ends Feb 19</span>
+          </div>
+          <div class="card-title">Will RBI cut repo rate by 25 bps in February 2025 policy?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 54K traders</span>
+            <span class="card-stat">💰 ₹3.3Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 78%</span>
+            <span class="no-label">NO 22%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:78%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will RBI cut repo rate by 25 bps in February 2025 policy?', 7.8, 2.2, 78)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹7.8</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will RBI cut repo rate by 25 bps in February 2025 policy?', 7.8, 2.2, 78, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹2.2</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="event-card" data-cat="entertainment">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#FCE4EC;color:#880E4F;">🎬 Entertainment</span>
+            <span class="card-ends">Ends Feb 25</span>
+          </div>
+          <div class="card-title">Will Sky Force collect more than ₹200 Cr worldwide?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 1.1L traders</span>
+            <span class="card-stat">💰 ₹7.9Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 60%</span>
+            <span class="no-label">NO 40%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:60%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will Sky Force collect more than ₹200 Cr worldwide?', 6.0, 4.0, 60)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹6.0</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will Sky Force collect more than ₹200 Cr worldwide?', 6.0, 4.0, 60, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹4.0</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="event-card" data-cat="football">
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="category-tag" style="background:#E8F5E9;color:#2E7D32;">⚽ Football</span>
+            <span class="card-ends">Ends May 30</span>
+          </div>
+          <div class="card-title">Will Manchester City finish in top 4 of Premier League this season?</div>
+          <div class="card-stats">
+            <span class="card-stat">👥 43K traders</span>
+            <span class="card-stat">💰 ₹1.8Cr</span>
+          </div>
+          <div class="prob-labels">
+            <span class="yes-label">YES 55%</span>
+            <span class="no-label">NO 45%</span>
+          </div>
+          <div class="prob-track">
+            <div class="prob-fill" style="width:55%"></div>
+          </div>
+        </div>
+        <div class="bet-row">
+          <button class="bet-btn yes-btn" onclick="openModal('Will Manchester City finish in top 4 of Premier League this season?', 5.5, 4.5, 55)">
+            <div class="bet-type yes">YES</div>
+            <div class="bet-price yes">₹5.5</div>
+          </button>
+          <button class="bet-btn no-btn" onclick="openModal('Will Manchester City finish in top 4 of Premier League this season?', 5.5, 4.5, 55, 'no')">
+            <div class="bet-type no">NO</div>
+            <div class="bet-price no">₹4.5</div>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchNav(this)">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item" onclick="switchNav(this)">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Explore</span>
+    </div>
+    <div class="nav-item" onclick="switchNav(this)">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Portfolio</span>
+    </div>
+    <div class="nav-item" onclick="switchNav(this)">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label">Wallet</span>
+    </div>
+    <div class="nav-item" onclick="switchNav(this)">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="overlayClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle-wrap">
+      <div class="modal-handle"></div>
+    </div>
+    <div class="modal-header">
+      <div class="modal-header-row">
+        <div class="modal-title" id="modal-title">Event Title</div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="trade-type-row">
+        <button class="trade-type-btn yes-sel" id="btn-yes" onclick="selectType('yes')">
+          <div class="trade-type-label">YES</div>
+          <div class="trade-type-price" id="yes-price">₹6.5</div>
+        </button>
+        <button class="trade-type-btn" id="btn-no" onclick="selectType('no')">
+          <div class="trade-type-label">NO</div>
+          <div class="trade-type-price" id="no-price">₹3.5</div>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="amount-label">Amount</div>
+      <div class="presets-row" id="presets-row">
+        <button class="preset-btn" onclick="setPreset(this, 50)">₹50</button>
+        <button class="preset-btn" onclick="setPreset(this, 100)">₹100</button>
+        <button class="preset-btn active" onclick="setPreset(this, 200)">₹200</button>
+        <button class="preset-btn" onclick="setPreset(this, 500)">₹500</button>
+        <button class="preset-btn" onclick="setPreset(this, 1000)">₹1000</button>
+      </div>
+      <div class="amount-input-wrap">
+        <span class="rupee-sign">₹</span>
+        <input class="amount-input" type="number" id="amount-input" value="200" oninput="updateSummary()">
+      </div>
+      <div class="summary-box">
+        <div class="summary-row">
+          <span class="summary-key">Price per share</span>
+          <span class="summary-val" id="sum-price">₹6.5</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Quantity</span>
+          <span class="summary-val" id="sum-qty">30.8 shares</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Total invested</span>
+          <span class="summary-val" id="sum-invested">₹200</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Max payout</span>
+          <span class="summary-val" id="sum-payout">₹308</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Potential profit</span>
+          <span class="summary-val green" id="sum-profit">+₹108</span>
+        </div>
+      </div>
+      <button class="confirm-btn yes" id="confirm-btn" onclick="confirmTrade()">
+        Confirm YES Trade · ₹200
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Trade placed successfully!</div>
+
+<script>
+  var currentYesPrice = 6.5;
+  var currentNoPrice = 3.5;
+  var selectedType = 'yes';
+
+  function switchTab(el) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function switchNav(el) {
+    document.querySelectorAll('.nav-item').forEach(function(n) {
+      n.classList.remove('active');
+      var dot = n.querySelector('.nav-dot');
+      if (dot) dot.remove();
+    });
+    el.classList.add('active');
+    var dot = document.createElement('div');
+    dot.className = 'nav-dot';
+    el.appendChild(dot);
+  }
+
+  function filterCat(el, cat) {
+    document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
+    el.classList.add('active');
+
+    var cards = document.querySelectorAll('.event-card');
+    var title = document.getElementById('section-title');
+
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (cat === 'all') {
+      title.textContent = '🔥 Top Events';
+    } else {
+      var names = { cricket: '🏏 Cricket', politics: '🗳️ Politics', finance: '📈 Finance', crypto: '₿ Crypto', entertainment: '🎬 Entertainment', football: '⚽ Football' };
+      title.textContent = names[cat] + ' Events';
+    }
+  }
+
+  function openModal(title, yesPrice, noPrice, yesPct, type) {
+    currentYesPrice = yesPrice;
+    currentNoPrice = noPrice;
+    selectedType = type || 'yes';
+
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('yes-price').textContent = '₹' + yesPrice;
+    document.getElementById('no-price').textContent = '₹' + noPrice;
+
+    document.getElementById('amount-input').value = 200;
+    setActiveType(selectedType);
+    updateSummary();
+
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function overlayClick(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  function selectType(type) {
+    selectedType = type;
+    setActiveType(type);
+    updateSummary();
+  }
+
+  function setActiveType(type) {
+    var btnYes = document.getElementById('btn-yes');
+    var btnNo = document.getElementById('btn-no');
+    var confirmBtn = document.getElementById('confirm-btn');
+
+    if (type === 'yes') {
+      btnYes.className = 'trade-type-btn yes-sel';
+      btnNo.className = 'trade-type-btn';
+      confirmBtn.className = 'confirm-btn yes';
+    } else {
+      btnYes.className = 'trade-type-btn';
+      btnNo.className = 'trade-type-btn no-sel';
+      confirmBtn.className = 'confirm-btn no';
+    }
+  }
+
+  function setPreset(el, amount) {
+    document.querySelectorAll('.preset-btn').forEach(function(b) { b.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('amount-input').value = amount;
+    updateSummary();
+  }
+
+  function updateSummary() {
+    var amount = parseFloat(document.getElementById('amount-input').value) || 0;
+    var price = selectedType === 'yes' ? currentYesPrice : currentNoPrice;
+    var qty = Math.round((amount / price) * 10) / 10;
+    var payout = Math.round(qty * 10);
+    var profit = payout - amount;
+
+    document.getElementById('sum-price').textContent = '₹' + price;
+    document.getElementById('sum-qty').textContent = qty + ' shares';
+    document.getElementById('sum-invested').textContent = '₹' + amount;
+    document.getElementById('sum-payout').textContent = '₹' + payout;
+
+    var profitEl = document.getElementById('sum-profit');
+    profitEl.textContent = (profit >= 0 ? '+' : '') + '₹' + Math.round(profit);
+    profitEl.className = 'summary-val ' + (profit >= 0 ? 'green' : 'red');
+
+    var amount2 = document.getElementById('amount-input').value;
+    var typeText = selectedType.toUpperCase();
+    document.getElementById('confirm-btn').textContent = 'Confirm ' + typeText + ' Trade · ₹' + amount2;
+  }
+
+  // ===== SPLASH SCREEN =====
+  window.addEventListener('load', function() {
+    document.body.style.overflow = 'hidden';
+    setTimeout(function() {
+      var splash = document.getElementById('splash');
+      splash.classList.add('exit');
+      setTimeout(function() {
+        splash.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 700);
+    }, 3500);
+  });
+
+  function confirmTrade() {
+    closeModal();
+    var toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+</script>
+
+</body>
+</html>
